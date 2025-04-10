@@ -1,0 +1,9 @@
+{
+	"name": "dfLevelup2025",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "cf9348ec-7514-4272-8f03-120fda7ca373",
+		"tenantId": "68ebceef-3671-46d0-ba55-d6916f5b99db"
+	}
+}
