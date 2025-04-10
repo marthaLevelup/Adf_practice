@@ -1,0 +1,45 @@
+{
+	"name": "emp_src",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "src_blob_conn",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "emp_src.csv",
+				"container": "srcpath"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "eno",
+				"type": "String"
+			},
+			{
+				"name": "lname",
+				"type": "String"
+			},
+			{
+				"name": "fname",
+				"type": "String"
+			},
+			{
+				"name": "deptno",
+				"type": "String"
+			},
+			{
+				"name": "salry",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

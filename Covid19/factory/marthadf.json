@@ -1,0 +1,9 @@
+{
+	"name": "marthadf",
+	"location": "uksouth",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "b99a4dc4-b4f9-40e8-923c-51e0535f7e49",
+		"tenantId": "68ebceef-3671-46d0-ba55-d6916f5b99db"
+	}
+}

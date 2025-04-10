@@ -1,0 +1,20 @@
+{
+	"name": "Json_param_file",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "src_blob_conn",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "ecdc_file_list.json",
+				"container": "srcpath"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

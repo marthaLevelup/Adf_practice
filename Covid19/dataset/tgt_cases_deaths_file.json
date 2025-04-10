@@ -1,0 +1,24 @@
+{
+	"name": "tgt_cases_deaths_file",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "tgt_datalake_conn",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "cases_deaths.csv",
+				"fileSystem": "stg"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,24 @@
+{
+	"name": "trigger_event_based",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "p_copy_file_2",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/srcpath/blobs/population_by_age.tsv.gz",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/6314d3cb-d922-4028-bb15-aa24cd7ed2d2/resourceGroups/martha_rg/providers/Microsoft.Storage/storageAccounts/marthasa",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}

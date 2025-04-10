@@ -1,0 +1,185 @@
+{
+	"name": "p_copy_file_audit4_logging",
+	"properties": {
+		"activities": [
+			{
+				"name": "cp_file_task",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.08:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DelimitedText2",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "tgt_population_ds",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Stored procedure1_copy1",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "cp_file_task",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[sp_audit_pipeline_log]",
+					"storedProcedureParameters": {
+						"end_dt": {
+							"value": {
+								"value": "@{activity('cp_file_task').ExecutionEndTime} ",
+								"type": "Expression"
+							},
+							"type": "Datetime"
+						},
+						"error_msg": {
+							"value": {
+								"value": "@if(\nequals(activity('cp_file_task').Status ,'Succeeded'), 'No Error', activity('cp_file_task').output.errors[0].Message\n)\n\n",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"p_id": {
+							"value": {
+								"value": "@{activity('cp_file_task').PipelineRunId} ",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"p_name": {
+							"value": {
+								"value": "@{activity('cp_file_task').PipelineName} ",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"rows_read": {
+							"value": {
+								"value": "@activity('cp_file_task').output.filesRead\n\n",
+								"type": "Expression"
+							},
+							"type": "Int32"
+						},
+						"rows_written": {
+							"value": {
+								"value": "@activity('cp_file_task').output.filesWritten",
+								"type": "Expression"
+							},
+							"type": "Int32"
+						},
+						"start_dt": {
+							"value": {
+								"value": "@{activity('cp_file_task').ExecutionStartTime} ",
+								"type": "Expression"
+							},
+							"type": "Datetime"
+						},
+						"status": {
+							"value": {
+								"value": "@{activity('cp_file_task').Status} ",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "cp_file_task",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "outp",
+					"value": {
+						"value": "@{activity('cp_file_task').output.errors[0].Message}",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"concurrency": 1,
+		"variables": {
+			"outp": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-04-08T17:15:08Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

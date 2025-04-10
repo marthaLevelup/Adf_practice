@@ -1,0 +1,115 @@
+{
+	"name": "df_emp_type1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "emp_src",
+						"type": "DatasetReference"
+					},
+					"name": "srcemp"
+				},
+				{
+					"dataset": {
+						"referenceName": "SqlServer_conn",
+						"type": "DatasetReference"
+					},
+					"name": "empDimLKP"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SqlServer_conn",
+						"type": "DatasetReference"
+					},
+					"name": "sinkEmpDim"
+				}
+			],
+			"transformations": [
+				{
+					"name": "deriveHASHKey"
+				},
+				{
+					"name": "existsHashKey"
+				},
+				{
+					"name": "lkpEmpDim"
+				},
+				{
+					"name": "setDates"
+				},
+				{
+					"name": "alterRow1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          eno as integer,",
+				"          lname as string,",
+				"          fname as string,",
+				"          deptno as integer,",
+				"          salry as float",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> srcemp",
+				"source(output(",
+				"          eno as decimal(18,0),",
+				"          ename as string,",
+				"          deptno as decimal(18,0),",
+				"          sal as decimal(10,2),",
+				"          ins_date as timestamp,",
+				"          upd_date as timestamp,",
+				"          hash_key as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> empDimLKP",
+				"srcemp derive(Hkey = sha1(toString(eno)+lname+fname+toString(deptno)+toString(salry)),",
+				"          ename = lname +' ' + fname) ~> deriveHASHKey",
+				"deriveHASHKey, empDimLKP exists(Hkey == hash_key,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> existsHashKey",
+				"existsHashKey, empDimLKP lookup(srcemp@eno == empDimLKP@eno,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lkpEmpDim",
+				"lkpEmpDim derive(ins_date = iif(isNull(ins_date), currentTimestamp(), ins_date),",
+				"          upd_date = iif(isNull(upd_date),currentTimestamp(),upd_date)) ~> setDates",
+				"setDates alterRow(upsertIf(true())) ~> alterRow1",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          eno as decimal(18,0),",
+				"          ename as string,",
+				"          deptno as decimal(18,0),",
+				"          sal as decimal(10,2),",
+				"          ins_date as timestamp,",
+				"          upd_date as timestamp,",
+				"          hash_key as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:false,",
+				"     upsertable:true,",
+				"     keys:['eno'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          eno = srcemp@eno,",
+				"          ename = deriveHASHKey@ename,",
+				"          deptno = srcemp@deptno,",
+				"          sal = salry,",
+				"          ins_date,",
+				"          upd_date,",
+				"          hash_key = Hkey",
+				"     )) ~> sinkEmpDim"
+			]
+		}
+	}
+}
