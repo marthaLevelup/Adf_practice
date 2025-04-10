@@ -1,0 +1,57 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "marthadf"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabase1_password": {
+			"value": ""
+		},
+		"ls_SqlServer_password": {
+			"value": ""
+		},
+		"src_blob_conn_connectionString": {
+			"value": ""
+		},
+		"tgt_datalake_conn_accountKey": {
+			"value": ""
+		},
+		"tgt_ecdc_all_files_accountKey": {
+			"value": ""
+		},
+		"AzureSqlDatabase1_properties_typeProperties_server": {
+			"value": "martha-db-server.database.windows.net"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_database": {
+			"value": "martha_sqlDB"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"value": "martha"
+		},
+		"ls_SqlServer_properties_typeProperties_server": {
+			"value": "martha-db-server.database.windows.net"
+		},
+		"ls_SqlServer_properties_typeProperties_database": {
+			"value": "martha_sqlDB"
+		},
+		"ls_SqlServer_properties_typeProperties_userName": {
+			"value": "martha"
+		},
+		"src_http_conn_properties_typeProperties_url": {
+			"value": "@{linkedService().SourceBaseURL}"
+		},
+		"tgt_datalake_conn_properties_typeProperties_url": {
+			"value": "https://marthadl.dfs.core.windows.net/"
+		},
+		"tgt_ecdc_all_files_properties_typeProperties_url": {
+			"value": "https://marthadl.dfs.core.windows.net/"
+		},
+		"trigger_event_based_properties_typeProperties_scope": {
+			"value": "/subscriptions/6314d3cb-d922-4028-bb15-aa24cd7ed2d2/resourceGroups/martha_rg/providers/Microsoft.Storage/storageAccounts/marthasa"
+		}
+	}
+}

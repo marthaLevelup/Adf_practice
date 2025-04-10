@@ -1,0 +1,194 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "marthadf"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+		},
+		"AzureSqlDatabase1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AzureSqlDatabase1'"
+		},
+		"ls_SqlServer_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_SqlServer'"
+		},
+		"src_blob_conn_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'src_blob_conn'"
+		},
+		"tgt_datalake_conn_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'tgt_datalake_conn'"
+		},
+		"tgt_ecdc_all_files_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'tgt_ecdc_all_files'"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "martha-db-server.database.windows.net"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "martha_sqlDB"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "martha"
+		},
+		"ls_SqlServer_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "martha-db-server.database.windows.net"
+		},
+		"ls_SqlServer_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "martha_sqlDB"
+		},
+		"ls_SqlServer_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "martha"
+		},
+		"src_http_conn_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "@{linkedService().SourceBaseURL}"
+		},
+		"tgt_datalake_conn_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://marthadl.dfs.core.windows.net/"
+		},
+		"tgt_ecdc_all_files_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://marthadl.dfs.core.windows.net/"
+		},
+		"trigger_event_based_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/6314d3cb-d922-4028-bb15-aa24cd7ed2d2/resourceGroups/martha_rg/providers/Microsoft.Storage/storageAccounts/marthasa"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "marthadf_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureBlobStorage1_connectionString": {
+						"value": "[parameters('AzureBlobStorage1_connectionString')]"
+					},
+					"AzureSqlDatabase1_password": {
+						"value": "[parameters('AzureSqlDatabase1_password')]"
+					},
+					"ls_SqlServer_password": {
+						"value": "[parameters('ls_SqlServer_password')]"
+					},
+					"src_blob_conn_connectionString": {
+						"value": "[parameters('src_blob_conn_connectionString')]"
+					},
+					"tgt_datalake_conn_accountKey": {
+						"value": "[parameters('tgt_datalake_conn_accountKey')]"
+					},
+					"tgt_ecdc_all_files_accountKey": {
+						"value": "[parameters('tgt_ecdc_all_files_accountKey')]"
+					},
+					"AzureSqlDatabase1_properties_typeProperties_server": {
+						"value": "[parameters('AzureSqlDatabase1_properties_typeProperties_server')]"
+					},
+					"AzureSqlDatabase1_properties_typeProperties_database": {
+						"value": "[parameters('AzureSqlDatabase1_properties_typeProperties_database')]"
+					},
+					"AzureSqlDatabase1_properties_typeProperties_userName": {
+						"value": "[parameters('AzureSqlDatabase1_properties_typeProperties_userName')]"
+					},
+					"ls_SqlServer_properties_typeProperties_server": {
+						"value": "[parameters('ls_SqlServer_properties_typeProperties_server')]"
+					},
+					"ls_SqlServer_properties_typeProperties_database": {
+						"value": "[parameters('ls_SqlServer_properties_typeProperties_database')]"
+					},
+					"ls_SqlServer_properties_typeProperties_userName": {
+						"value": "[parameters('ls_SqlServer_properties_typeProperties_userName')]"
+					},
+					"src_http_conn_properties_typeProperties_url": {
+						"value": "[parameters('src_http_conn_properties_typeProperties_url')]"
+					},
+					"tgt_datalake_conn_properties_typeProperties_url": {
+						"value": "[parameters('tgt_datalake_conn_properties_typeProperties_url')]"
+					},
+					"tgt_ecdc_all_files_properties_typeProperties_url": {
+						"value": "[parameters('tgt_ecdc_all_files_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "marthadf_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'marthadf_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "marthadf_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"trigger_event_based_properties_typeProperties_scope": {
+						"value": "[parameters('trigger_event_based_properties_typeProperties_scope')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'marthadf_ArmTemplate_1')]"
+			]
+		}
+	]
+}
